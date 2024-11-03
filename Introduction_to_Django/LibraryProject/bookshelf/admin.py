@@ -1,5 +1,5 @@
 from django.contrib import admin
-from bookshelf.models import Book
+from .models import Book
 
 # Configure the list_display, search_fields, and list_filter custom options
 
