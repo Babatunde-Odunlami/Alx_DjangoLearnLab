@@ -26,3 +26,24 @@ class LibraryDetailView(DetailView):
     template_name = 'relationship_app/library_detail.html'
     context_object_name = books
 
+
+# relationship_app/views.py
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+
+# Login view
+class Login(auth_views.LoginView):
+    template_name = 'relationship_app/login.html'
+
+# Logout view
+class Logout(auth_views.LogoutView):
+    template_name = 'relationship_app/logout.html'
+
+# Registration view
+class Register(CreateView):
+    form_class = UserCreationForm
+    template_name = 'relationship_app/register.html'
+    success_url = reverse_lazy('login')
+

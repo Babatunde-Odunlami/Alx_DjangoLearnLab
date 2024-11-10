@@ -82,6 +82,12 @@ DATABASES = {
 }
 
 
+# project_name/settings.py
+LOGIN_REDIRECT_URL = 'home'  # Redirect to home page after login
+LOGOUT_REDIRECT_URL = 'login'  # Redirect to login page after logout
+
+
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
