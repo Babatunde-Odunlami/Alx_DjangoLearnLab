@@ -10,7 +10,7 @@ def book_list(request):
 #class based view
 #Create a class-based view in relationship_app/views.py that displays details for a specific library,listing all books available in the library.
 from django.views.generic import ListView
-from .models import Book, Library
+from .models import Library
 
 #Utilize Django's ListView or DetailView to structure this class-based view.
 class BookListView(ListView):
