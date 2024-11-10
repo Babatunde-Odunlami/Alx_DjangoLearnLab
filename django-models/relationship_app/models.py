@@ -4,6 +4,8 @@ from django.db import models
 #create the AuthorModel
 class Author(models.Model)
     name = models.charField(max_length = 100)
+    def __str__(self):
+        return self.name
 
 #create the BookModel
 class Book(models.Model)
