@@ -34,11 +34,11 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.contrib.auth import login
 # Login view
-class Login(auth_views.LoginView):
+class LoginView(auth_views.LoginView):
     template_name = 'relationship_app/login.html'
 
 # Logout view
-class Logout(auth_views.LogoutView):
+class LogoutView(auth_views.LogoutView):
     template_name = 'relationship_app/logout.html'
 
 # Registration view
