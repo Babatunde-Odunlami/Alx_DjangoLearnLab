@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+
 # Create your views here.
 #function based view
 def book_list(request):
@@ -10,12 +10,12 @@ def book_list(request):
 #class based view
 #Create a class-based view in relationship_app/views.py that displays details for a specific library,listing all books available in the library.
 from django.views.generic import ListView
-from .models import Book
+from .models import Book, Library
 
 #Utilize Django's ListView or DetailView to structure this class-based view.
 class BookListView(ListView):
-    model = Book
-    template_name = library_detail.html
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = books
 
 
