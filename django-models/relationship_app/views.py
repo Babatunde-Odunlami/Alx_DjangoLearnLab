@@ -75,3 +75,11 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
+
+    # relationship_app/views.py
+def is_admin(user):
+    if user.is_authenticated:
+        # Check if user has a UserProfile and the role is 'Admin'
+        return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+    return False
+
