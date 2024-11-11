@@ -51,6 +51,12 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 
+
+
+
+
+
+
 # relationship_app/models.py
 from django.db import models
 

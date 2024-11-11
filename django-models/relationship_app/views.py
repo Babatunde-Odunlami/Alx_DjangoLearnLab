@@ -54,13 +54,13 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.http import HttpResponseForbidden
 
-def is_admin(user):
+def Admin(user):
     return user.is_authenticated and user.userprofile.role == 'Admin'
 
-def is_librarian(user):
+def Librarian(user):
     return user.is_authenticated and user.userprofile.role == 'Librarian'
 
-def is_member(user):
+def Member(user):
     return user.is_authenticated and user.userprofile.role == 'Member'
 
 @user_passes_test(is_admin)
@@ -76,8 +76,8 @@ def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
 
-    # relationship_app/views.py
-def is_admin(user):
+# relationship_app/views.py
+def Admin(user):
     if user.is_authenticated:
         # Check if user has a UserProfile and the role is 'Admin'
         return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
