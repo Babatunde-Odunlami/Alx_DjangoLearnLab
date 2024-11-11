@@ -8,6 +8,7 @@ from .views import Login, Logout, Register
 from django.contrib.auth.views import LoginView, LogoutView
 from .views import register
 from .views import admin_view, librarian_view, member_view
+from .views import add_book, edit_book, delete_book
 
 #create url patterns
 urlpatterns = [
@@ -23,4 +24,7 @@ urlpatterns = [
     path('admin-view/', admin_view, name='admin_view'),
     path('librarian-view/', librarian_view, name='librarian_view'),
     path('member-view/', member_view, name='member_view'),
+    path('add-book/', add_book, name='add_book'),
+    path('edit-book/<int:pk>/', edit_book, name='edit_book'),
+    path('delete-book/<int:pk>/', delete_book, name='delete_book'),
 ]
