@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+#Task 1
 # Create your views here.
 #function based view
 def list_books(request):
@@ -14,7 +14,6 @@ from django.views.generic.detail import DetailView
 from .models import Library
 
 #Utilize Django's ListView or DetailView to structure this class-based view.
-
 class BookListView(ListView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
@@ -27,6 +26,8 @@ class LibraryDetailView(DetailView):
     context_object_name = books
 
 
+
+#Task 2
 # relationship_app/views.py
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.forms import UserCreationForm
@@ -55,13 +56,16 @@ from django.shortcuts import render
 from django.http import HttpResponseForbidden
 
 def Admin(user):
-    return user.is_authenticated and user.userprofile.role == 'Admin'
+    if user.is_authenticated and user.userprofile.role == 'Admin'
+        return admin_view()
 
 def Librarian(user):
-    return user.is_authenticated and user.userprofile.role == 'Librarian'
+    if user.is_authenticated and user.userprofile.role == 'Librarian'
+        return librarian_view()
 
 def Member(user):
-    return user.is_authenticated and user.userprofile.role == 'Member'
+    if user.is_authenticated and user.userprofile.role == 'Member'
+        return member_view()
 
 @user_passes_test(Admin)
 def admin_view(request):
@@ -75,19 +79,31 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
+#role check
+def Admin(user):
+    if user.is_authenticated and user.userprofile.role == 'Admin'
+    return admin_view()
 
+def Librarian(user):
+    if user.is_authenticated and user.userprofile.role == 'Librarian'
+    return librarian_view()
+    
+def Member(user):
+    if user.is_authenticated and user.userprofile.role == 'Member'
+    return member_view()
+"""
 # relationship_app/views.py
 def Admin(user):
     if user.is_authenticated:
         # Check if user has a UserProfile and the role is 'Admin'
         return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
     return False
+"""
 
 
 
 
-
-
+#task 4
 # relationship_app/views.py
 from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404, redirect
