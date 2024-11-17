@@ -22,9 +22,9 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
     path('register/', views.register, name='register'),
     #task 3
-    path('Admin/', admin_view.as_view(template_name='relationship_app/admin_view.html'), name='admin_view'),
-    path('Librarian/', librarian_view.as_view(template_name='relationship_app/librarian_view.html'), name='librarian_view'),
-    path('Member/', member_view.as_view(template_name='relationship_app/member_view.html'), name='member_view'),
+    path('Admin/', admin_view, name='admin_view'),
+    path('Librarian/', librarian_view, name='librarian_view'),
+    path('Member/', member_view, name='member_view'),
     #task 4
     path('add_book/', add_book, name='add_book'),
     path('edit_book/<int:pk>/', edit_book, name='edit_book'),
