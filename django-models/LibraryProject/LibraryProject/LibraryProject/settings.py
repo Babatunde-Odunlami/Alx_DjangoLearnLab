@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'relationship_app',
 ]
 
 MIDDLEWARE = [
@@ -80,12 +79,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-
-# project_name/settings.py
-LOGIN_REDIRECT_URL = 'login'  # Redirect to home page after login
-LOGOUT_REDIRECT_URL = 'login'  # Redirect to login page after logout
-
 
 
 # Password validation
