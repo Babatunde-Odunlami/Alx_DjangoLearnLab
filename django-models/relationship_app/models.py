@@ -1,3 +1,4 @@
+#TASK 1
 from django.db import models
 
 # Create your models here.
@@ -22,7 +23,7 @@ class Librarian(models.Model)
     name = models.charField(max_length = 100)
     libraries = models.OneToOneField(Library, on_delete= models.CASCADE, related_named='librarian')
 
-
+#TASK 3
 # relationship_app/models.py
 from django.contrib.auth.models import User
 from django.db import models
@@ -35,13 +36,14 @@ class UserProfile(models.Model):
         ('Librarian', 'Librarian'),
         ('Member', 'Member'),
     ]
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userprofile')
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='Member')
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
 
     def __str__(self):
         return f"{self.user.username} - {self.role}"
 
-def create_user_profile(sender, instance, created, **kwargs):
+@receiver(post_save, sender=User)
+def created_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
 
@@ -51,12 +53,7 @@ def save_user_profile(sender, instance, **kwargs):
 
 
 
-
-
-
-
-
-
+#TASK 4
 # relationship_app/models.py
 from django.db import models
 

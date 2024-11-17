@@ -15,16 +15,19 @@ urlpatterns = [
     path('list_books/', views.list_books, name='list-book'),
     path('book_list/', views.BookListView.as_view(), name = 'book_list'),
     path('books/',LibraryDetailView.as_view(), name='book-list'), 
-    path('login/', Login.as_view(), name='login'), 
-    path('logout/', Logout.as_view(), name='logout'), 
+    #task 2
+    #path('login/', Login.as_view(), name='login'), 
+    #path('logout/', Logout.as_view(), name='logout'), 
     path('register/', views.Register.as_view(), name='register'),
     path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
-    path('register/', views.register, name='register'),
+    #path('register/', views.register, name='register'),
+    
     #task 3
-    path('Admin/', admin_view, name='admin_view'),
-    path('Librarian/', librarian_view, name='librarian_view'),
-    path('Member/', member_view, name='member_view'),
+    path('admin-page/', views.admin_view, name='admin_view'),
+    path('librarian-page/', views.librarian_view, name='librarian_view'),
+    path('member-page/', views.member_view, name='member_view'),
+    
     #task 4
     path('add_book/', add_book, name='add_book'),
     path('edit_book/<int:pk>/', edit_book, name='edit_book'),
