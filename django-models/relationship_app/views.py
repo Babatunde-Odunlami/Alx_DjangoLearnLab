@@ -55,52 +55,27 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.http import HttpResponseForbidden
 
-def Admin(user):
-    if user.is_authenticated and user.userprofile.role == 'Admin':
-        return admin_view()
-
-def Librarian(user):
-    if user.is_authenticated and user.userprofile.role == 'Librarian':
-        return librarian_view()
-
-def Member(user):
-    if user.is_authenticated and user.userprofile.role == 'Member':
-        return member_view()
-
-@user_passes_test(Admin)
+#checks if user is authenticated and also the admin role
+def is_admin(user):
+    return user.is_authenticated and user.userprofile.role == 'Admin'
+#when the user check passes, test user again before user can access role-based view
+@user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
-
-@user_passes_test(Librarian)
+#checks if user is authenticated and also the librarian role
+def is_librarian(user):
+    return user.is_authenticated and user.userprofile.role == 'Librarian'
+#when the user check passes, test user again before user can access role-based view
+@user_passes_test(is_librarian)
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
-
-@user_passes_test(Member)
+#checks if user is authenticated and also the member role
+def is_member(user):
+    return user.is_authenticated and user.userprofile.role == 'Member'
+#when the user check passes, test user again before user can access role-based view
+@user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
-
-#role check
-def Admin(user):
-    if user.is_authenticated and user.userprofile.role == 'Admin'
-    return admin_view()
-
-def Librarian(user):
-    if user.is_authenticated and user.userprofile.role == 'Librarian'
-    return librarian_view()
-    
-def Member(user):
-    if user.is_authenticated and user.userprofile.role == 'Member'
-    return member_view()
-"""
-# relationship_app/views.py
-def Admin(user):
-    if user.is_authenticated:
-        # Check if user has a UserProfile and the role is 'Admin'
-        return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
-    return False
-"""
-
-
 
 
 #task 4
