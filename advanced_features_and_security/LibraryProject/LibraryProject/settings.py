@@ -19,14 +19,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
+from decouple import config
 SECRET_KEY = 'django-insecure-1g8r0)sy1gbiripc$$-^!e012t2h*rzjs6!d!iz7!8eyf)xrrl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+        '127.0.0.1',
+        'localhost'
+        ]
 
+
+#decoupled Users to new custom user
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Application definition
 
@@ -39,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf.apps.BookshelfConfig',
     'relationship_app.apps.RelationshipAppConfig',
+    'csp', 
+    'sslserver',
 ]
 
 MIDDLEWARE = [
@@ -82,11 +92,11 @@ DATABASES = {
     }
 }
 
-
+"""
 # project_name/settings.py
 LOGIN_REDIRECT_URL = 'relationship_app/profile'  # Redirect to home page after login
 LOGOUT_REDIRECT_URL = 'relationship_app/profile'  # Redirect to login page after logout
-
+"""
 
 
 # Password validation
@@ -129,3 +139,27 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+#to be deleted??
+# LOGIN_REDIRECT_URL = '/relationship_app/profile/'
+# LOGOUT_REDIRECT_URL = "/relationship_app/profile/"
+
+#added security for mock project
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+
+#ONLY USE IN DEPLOYMENT
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Include subdomains in HSTS
+SECURE_HSTS_PRELOAD = True  # Allow site to be preloaded by browsers
+SECURE_PROXY_SSL_HEADER = "HTTP_X_FORWARDED_PROTO"
+
+
+#csp settings
+CSP_DEFAULT_SRC = ("'self'",)  # Allow content only from the same origin
