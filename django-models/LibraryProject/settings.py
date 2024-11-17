@@ -83,7 +83,7 @@ DATABASES = {
 
 
 # project_name/settings.py
-LOGIN_REDIRECT_URL = 'home'  # Redirect to home page after login
+LOGIN_REDIRECT_URL = 'login'  # Redirect to home page after login
 LOGOUT_REDIRECT_URL = 'login'  # Redirect to login page after logout
 
 
