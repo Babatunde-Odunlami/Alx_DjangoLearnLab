@@ -1,1 +1,2 @@
-# Alx_DjangoLearnLab
+# Alx_DjangoLearnLab 
+Alx curriculum for learning backend development
