@@ -10,9 +10,9 @@ class BookList(generics.ListAPIView):
 
 
 #Task2: creating viewset
-from rest_framework.viewsets import ModelViewSet  #additional imports in addition to the initials above
+from rest_framework import viewsets  #additional imports in addition to the initials above
 #creat your views here
-class BookViewSet(ModelViewSet):
+class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 #make sure to register the viewset in urls
