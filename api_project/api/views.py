@@ -19,5 +19,26 @@ class BookViewSet(viewsets.ModelViewSet):
 
 
 #Task3: generate and use tokens as authorization/permission to authenticate requests
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+#create your views here
+class AuthenticatedViewSet(viewsets.ModelViewSet):
+    '''permits view for only authenticated user'''
+    permission_classes = [IsAuthenticated]
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+class AdminViewSet(viewsets.ModelViewSet):
+    '''allows views for only admin user'''
+    permission_classes = [IsAdminUser]
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+
+class PublicView(APIView):
+    '''allows anyone to view'''
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        return Response({"message": "This is a public endpoint."})
+
 
 
