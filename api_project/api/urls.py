@@ -14,4 +14,6 @@ urlpatterns = [
         path('books/', BookList.as_view(), name = 'book-list'),
         #task2: Include the generated router URLS for BookViewSet (all CRUD operations)
         path('', include(router.urls)), #includes all routes registered with the router
+        #Task3: Token retrieval through username and password
+        path('api/token/', obtain_auth_token, name='obtain-token'),
         ]
