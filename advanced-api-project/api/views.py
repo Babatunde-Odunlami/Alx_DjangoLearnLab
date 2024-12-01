@@ -9,7 +9,7 @@ from rest_framework.filters import SearchFilter
 #import the necessary generics .APIS to perform CRUD operations
 from rest_framework.generics import ListView, ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 #import necessary authentication toolss
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 
 # Create your views here.
