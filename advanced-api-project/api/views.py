@@ -1,7 +1,7 @@
 from django.shortcuts import render
 #task 1
 from rest_framework import generics
-from django_filters.rest_framework import DjangoFilterBackend, SearchFilter, OrderingFilter
+from django_filters import rest_framework #import DjangoFilterBackend, SearchFilter, OrderingFilter
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
 from .filters import BookFilter  #import from the created filters.py file
@@ -19,7 +19,7 @@ class BookList(generics.ListAPIView):
     ''' assign objects to attributes'''
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [rest_framework.DjangoFilterBackend, rest_framework.SearchFilter]
     filterset_class = BookFilter
     search_fields = ['title', 'author']   #these would be the only serachbale fields
     ordering_fields = ['title', 'publication_year']  #fileds that can be used to order the objects
