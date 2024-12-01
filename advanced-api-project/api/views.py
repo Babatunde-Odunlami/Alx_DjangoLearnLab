@@ -5,12 +5,12 @@ from django_filters import rest_framework #import DjangoFilterBackend, SearchFil
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
 from .filters import BookFilter  #import from the created filters.py file
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, Orderfilter
 #import the necessary generics .APIS to perform CRUD operations
 from rest_framework.generics import ListView, ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 #import necessary authentication toolss
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-
+from rest_framework import filters
 
 # Create your views here.
 class BookList(generics.ListAPIView):
@@ -19,7 +19,7 @@ class BookList(generics.ListAPIView):
     ''' assign objects to attributes'''
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    filter_backends = [rest_framework.DjangoFilterBackend, rest_framework.SearchFilter]
+    filter_backends = [filters.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_class = BookFilter
     search_fields = ['title', 'author']   #these would be the only serachbale fields
     ordering_fields = ['title', 'publication_year']  #fileds that can be used to order the objects
