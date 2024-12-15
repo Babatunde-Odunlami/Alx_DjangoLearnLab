@@ -1,0 +1,14 @@
+
+{% block content%}
+<h3>
+    Edit Comment
+</h3>
+<a href= "{% url 'posts' %}">Go Back</a>
+
+<form method='POST', action=''>
+    {% csrf_token %}
+    {{form}}
+    <input type= 'submit', value='Submit'>
+</form>
+
+{% endblock %}

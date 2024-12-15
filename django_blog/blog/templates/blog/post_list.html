@@ -1,0 +1,36 @@
+{% extends 'blog/base.html' %}
+{% block content%}
+<table>
+    <tr>
+        <th>Django Blog Posts</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Author</th>
+    </tr>
+    
+        {% for post in posts%}
+        <tr>
+            <td>{{post.title}}</td>
+            <td><a href="{% url 'post-detail' post.id %}">View</a></td>
+            {% if request.user.is_authenticated %}
+            <td><a href="{% url 'post-edit' post.id %}">Edit</a></td>
+            <td><a href="{% url 'post-delete' post.id %}">Delete</a></td> 
+            <td> {{ post.author.username}} </td> 
+            
+            {% endif %}
+            
+        </tr>
+        {% empty %}
+        <h3>No items in list</h3>
+        {% endfor %}
+        <form method="get" action="{% url 'search_posts' %}">
+            <input type="text" name="q" value="{{ query }}" placeholder="Search posts..." />
+            <button type="submit">Search</button>
+        </form>
+   
+
+
+</table>
+
+{% endblock %}
