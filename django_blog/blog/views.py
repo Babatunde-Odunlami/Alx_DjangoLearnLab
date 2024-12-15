@@ -1,3 +1,4 @@
+"""
 from django.shortcuts import render
 from .models import CustomUserCreationForm  #needed to register new users
 from django.urls import reverse_lazy
@@ -16,7 +17,7 @@ class register(CreateView):
 class ProfileView(TemplateView):i
     template_name = 'blog/profile.html'
 
-"""
+
 #Profile management: create a view that allows authenticated users to view and edit thier profiles.
 #This view should handle POST requests to update user information.
 #extend the user model to enable addition of  bio and profile pic
@@ -33,7 +34,7 @@ class UpdateProfileView(UpdateView, LoginReguiredMixin):
 
     def get_object(self):
         return self.request.user    #ensure user can only edit thier own profile
-"""
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -53,4 +54,281 @@ def Update_Profile(request):
         form = UserProfileForm(instance=user)  # Pre-fill the form with current user data
     return render(request, 'blog/update_profile.html', {'form': form})
 
+
+#import the necessary generics .APIS to perform CRUD operations
+from rest_framework.generics import ListView, ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+#import necessary authentication toolss
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+
+"""
+
+
+from .forms import CommentForm, CustomUserCreationForm
+from django.shortcuts import render, redirect
+# from django.contrib.auth.forms import UserCreationForm
+from django.views.generic import FormView, ListView, DetailView, UpdateView, CreateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.urls import reverse_lazy
+from django.contrib.auth import login
+from django.contrib import messages
+from .models import Comment, Post, Profile, Tag
+from .forms import UserForm, ProfileForm, CustomPostCreationForm
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
+
+
+# Create your views here.
+
+
+# Define the registeration view
+class RegisterView(FormView):
+    template_name = 'blog/register.html'
+    form_class = CustomUserCreationForm  # This must be a custom form class
+    redirect_authenticated_user = True
+    success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+
+        user = form.save() # Save the user to the database
+
+        messages.success(self.request, "Account created successfully! You can now log in.")
+
+        if user is not None:
+            login(self.request, user)
+        return super(RegisterView, self).form_valid(form)
+
+class HomeView(ListView):
+    model = Post
+    context_object_name = 'home'
+    template_name = 'blog/base.html'
+
+
+class ListPostsView(ListView):
+    model = Post
+    context_object_name = 'posts'
+    template_name = 'blog/post_list.html'
+
+class CreatePostView(LoginRequiredMixin, CreateView):
+    model = Post
+    context_object_name = 'post'
+    form_class = CustomPostCreationForm
+    # fields = ['title', 'content', 'tags']
+    template_name = 'blog/post_create.html'
+    # form_class = form
+    success_url = reverse_lazy('posts')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super(CreatePostView, self).form_valid(form)
+
+
+class ProfileView(LoginRequiredMixin, DetailView):
+    """
+    view used to handle the display of a user profile
+    By consuming the generic.DetailView and outputing the profile_detail.html
+    """
+    model = Profile
+    template_name = 'blog/profile_detail.html'
+    context_object_name = 'profile' # name used to reference the class/object in the templates
+
+
+    def get_object(self):
+        """Return the profile of the currently logged-in user."""
+        return self.request.user.profile
+
+# class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+#     ...
+
+@login_required
+def ProfileUpdateView(request):
+
+    user = request.user # Get the logged-in user
+    profile = user.profile  # Assuming OneToOne relationship, get the proflie of the user
+
+    if request.method == 'POST':
+        # create a user_form and profile_form instance that gets & handles the data passed by the user
+        user_form = UserForm(request.POST, instance=user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save() # Save the changes to the user model
+            profile_form.save() # Save the changes to the profile model
+            return redirect('profile')  # Redirect to profile detail page
+    else:
+        # Initialize the forms with existing data, if the user request is not a POST request
+        user_form = UserForm(instance=user)
+        profile_form = ProfileForm(instance=profile)
+
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    }
+
+    return render(request, 'blog/profile_update.html', context)
+
+class DetailPostView(DetailView):
+    model = Post
+    context_object_name = 'post'
+    template_name = 'blog/post_detail.html'
+
+    # Add comments to the Post context_object_data for the view
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()  # Get the post object
+        context['comments'] = post.comments.all()  # Fetch all related comments
+        return context
+
+class EditPostView(LoginRequiredMixin, UpdateView):
+    model = Post
+    context_object_name = 'post'
+    template_name = 'blog/post_update.html'
+    fields = [ 'title', 'content', 'tags']
+
+    # success_url = reverse_lazy('post-detail', args=['post.id'])
+
+    def get_success_url(self):
+            # Use reverse_lazy to dynamically pass the pk of the created object
+            return reverse_lazy('post-detail', kwargs={'pk': self.object.pk})
+
+class DeletePostView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    context_object_name = 'post'
+    fields = '__all__'
+    success_url = reverse_lazy('posts')
+
+    def test_func(self):
+        post =  self.get_object()
+        return post.author == self.request.user
+
+    def handle_no_permission(self):
+    # Redirect to a custom "access denied" page
+        return redirect('home')
+
+class CommentCreateView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_create.html'
+    context_object_name = 'comment'
+
+
+    # def get_form_kwargs(self):
+    #     # Pass the request to the form so we can use request.user in the form's save method
+    #     kwargs = super().get_form_kwargs()
+    #     # Get the Post object using the 'post_id' from the URL
+    #     post = get_object_or_404(Post, id=self.kwargs['post_id'])
+    #     # Pass the Post object to the form via 'initial' data
+    #     kwargs['initial'] = {'post': post}  # or {'post': post.id} to just pass the ID
+    #     kwargs['request'] = self.request
+    #     return kwargs
+    def form_valid(self, form):
+        post = get_object_or_404(Post, id=self.kwargs['pk'])
+        comment = form.save(commit=False)
+        comment.post = post  # Assign the post to the comment
+        comment.author = self.request.user
+        comment.save()
+        # return super(CreateCommentView, self).form_valid(form)
+        return redirect('post-detail', pk=post.id)
+
+class CommentUpdateView(UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_update.html'
+    context_object_name = 'comment'
+
+    def get_object(self):
+        # Use `comment_id` from the URL to get the object
+        return get_object_or_404(Comment, id=self.kwargs['pk'])
+
+    def test_func(self):
+        comment =  self.get_object()
+        return comment.author == self.request.user
+
+    def handle_no_permission(self):
+    # Redirect to a custom "access denied" page
+        comment = get_object_or_404(Comment, id=self.kwargs['pk'])
+        return redirect('post-detail', pk=comment.post.id)
+
+    def form_valid(self, form):
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('post-detail', kwargs={'pk': self.object.post.id})
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    context_object_name = 'comment'
+    fields = '__all__'
+    # success_url = reverse_lazy('posts')
+    # DeleteView requires a default template
+    # template_name = modelname_confirm_delete.html
+
+    def get_object(self):
+        # Use `comment_id` from the URL to get the object
+        return get_object_or_404(Comment, id=self.kwargs['pk'])
+
+
+
+    def get_success_url(self):
+        return reverse_lazy('post-detail', kwargs={'pk': self.object.post.id})
+
+
+    def test_func(self):
+        comment =  self.get_object()
+        return comment.author == self.request.user
+
+    def handle_no_permission(self):
+    # Redirect to a custom "access denied" page
+        comment = get_object_or_404(Comment, id=self.kwargs['pk'])
+        return redirect('post-detail', pk=comment.post.id)
+
+class ListCommentsView(ListView):
+    model = Comment
+    context_object_name = 'comments'
+    template_name = 'blog/post_detail.html'
+
+
+class SearchView(ListView):
+    model = Post
+    template_name = 'post_search.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')  # Get the search query from URL
+        queryset = Post.objects.all()  # Start with all posts
+
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |  # Search in the title
+                Q(content__icontains=query) |  # Search in the content
+                Q(tags__name__icontains=query)  # Search in the tags
+            ).distinct()  # Ensure unique results
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '')  # Pass the search query to the template
+        return context
+
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'posts_by_tag.html'
+    context_object_name = 'posts'
+    paginate_by = 10  # Optional: Add pagination
+
+    def get_queryset(self):
+        # Get the tag slug from the URL
+        tag_slug = self.kwargs['tag_slug']
+        # Fetch the tag object or return 404 if it doesn't exist
+        tag = get_object_or_404(Tag, slug=tag_slug)  # Query by slug
+        # Filter posts by the tag using the TagPost intermediary model
+        return Post.objects.filter(tags__name=tag.name)
+
+    def get_context_data(self, **kwargs):
+        # Add additional context for the template
+        context = super().get_context_data(**kwargs)
+        context['tag'] = get_object_or_404(Tag, slug=self.kwargs['tag_slug'])
+        return context
 
