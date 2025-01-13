@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+#import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-9nnrydip1c&-^pcrf5)un0egk_*ls0i4yq$3y&7f6x(ktjrmjm'
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your_sceret_key')
+#SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your_sceret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True #False
 
-ALLOWED_HOSTS = ['yourdomain.com', 'your_server_ip']
+ALLOWED_HOSTS = [] #['yourdomain.com', 'your_server_ip']
 
 
 # Application definition
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts', 'posts', 'notifications',
+    'accounts', #'posts', 'notifications',
     'rest_framework', 'rest_framework.authtoken',
 ]
 
@@ -76,8 +77,14 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -88,7 +95,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
+"""
 
 
 # Password validation
@@ -150,9 +157,9 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
-SECURE_BROWSER_XSS_FILTER = True
-X_FRAME_OPTIONS = 'DENY'
-SECURE_CONTENT_TYPE_NOSNIFF = True
-SECURE_SSL_REDIRECT = True
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+#SECURE_BROWSER_XSS_FILTER = True
+#X_FRAME_OPTIONS = 'DENY'
+#SECURE_CONTENT_TYPE_NOSNIFF = True
+#SECURE_SSL_REDIRECT = True
+#CSRF_COOKIE_SECURE = True
+#SESSION_COOKIE_SECURE = True
