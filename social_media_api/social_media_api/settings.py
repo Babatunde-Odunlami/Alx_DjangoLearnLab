@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-#import os
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,13 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9nnrydip1c&-^pcrf5)un0egk_*ls0i4yq$3y&7f6x(ktjrmjm'
-#SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your_sceret_key')
+#SECRET_KEY = 'django-insecure-9nnrydip1c&-^pcrf5)un0egk_*ls0i4yq$3y&7f6x(ktjrmjm'
+
+#deployment requirement for secure app
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your_sceret_key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True #False
+DEBUG = False #True
 
-ALLOWED_HOSTS = [] #['yourdomain.com', 'your_server_ip']
+#deployment requirement for secue app
+ALLOWED_HOSTS = ['yourdomain.com', 'your_server_ip'] #[]
 
 
 # Application definition
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #apps
     'accounts', 'posts', 'notifications',
     'rest_framework', 'rest_framework.authtoken',
 ]
@@ -157,9 +161,10 @@ REST_FRAMEWORK = {
 
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
-#SECURE_BROWSER_XSS_FILTER = True
-#X_FRAME_OPTIONS = 'DENY'
-#SECURE_CONTENT_TYPE_NOSNIFF = True
-#SECURE_SSL_REDIRECT = True
-#CSRF_COOKIE_SECURE = True
-#SESSION_COOKIE_SECURE = True
+#deployment required for secure web
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
